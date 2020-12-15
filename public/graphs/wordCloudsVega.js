@@ -4,7 +4,7 @@ function createWordCloud(hist, container){
   	{
   		"$schema": "https://vega.github.io/schema/vega/v5.json",
   		"description": "A word cloud visualization depicting the historical data word sentiments.",
-  		"width": 800,
+  		"width": 600,
   		"height": 400,
   		"padding": 0,
 

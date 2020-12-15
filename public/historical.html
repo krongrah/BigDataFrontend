@@ -19,6 +19,7 @@
 
   <!--Custom Graph Scripts:-->
   <script src="graphs/wordCloudsVega.js"></script>
+  <script src="graphs/sentimentAndMentions.js"></script>
   <script src="graphs/friendsAndSentimentVega.js"></script>
   <script src="graphs/simpleGraph.js"></script>
 
@@ -53,6 +54,9 @@
 		fetchData()
 		var negativeWords = []
 		var positiveWords = []
+		var sentiments = []
+		var sentimentsMentions = []
+
 		var entries = []
 
 	
@@ -64,48 +68,81 @@
 			//Getting Historical tweets
 			data.forEach(obj => {
 				try{
-					const tweet = document.createElement("p")
-					tweet.setAttribute("class", "tweet")
-					tweet.textContent = obj.text
-					document.getElementById("analysedData").appendChild(tweet)
-
-					//Sorting by negative and positive words
-					if(obj.negativeWords.length > 0){
-						//Not an empty list:
-						negativeWords.push(obj.negativeWords)
-					}
-					if(obj.positiveWords.length > 0){
-						//Not an empty list:
-						positiveWords.push(obj.positiveWords)
-					}
+					//console.log(obj)
+					plotToTweet(obj)
+					handleWordAssociations(obj)
+					handleSentiments(obj)
+					handleSentimentsMentions(obj)
 				}catch(err){
 					console.log(err)
 				}
 				
 			})
+			plotGraphs()
+		}
+		
+		function plotGraphs(){
 			createWordCloud(negativeWords, "neg")
 			createWordCloud(positiveWords, "pos")
+			plotSentiments(sentiments, "sentiment")
+			plotSentimentsMentions(sentimentsMentions, "mentions")
+		}
+		
+		function handleWordAssociations(tweet){
+			//Sorting by negative and positive words
+			if(tweet.negativeWords.length > 0){
+				//Not an empty list:
+				negativeWords.push(tweet.negativeWords)
+			}
+			if(tweet.positiveWords.length > 0){
+				//Not an empty list:
+				positiveWords.push(tweet.positiveWords)
+			}		
+		}
 
+		function handleSentiments(tweet){
+			sentiments.push({"sentimentScore": tweet.sentimentScore, "friendsCount": tweet.friendsCount})
+		}
+		
+		function handleSentimentsMentions(tweet){
+			sentimentsMentions.push({"sentimentScore": tweet.sentimentScore, "hasMentioned": tweet.hasMentioned})
+		}
+
+		function plotToTweet(t){
+			const tweet = document.createElement("p")
+			tweet.setAttribute("class", "tweet")
+			tweet.textContent = t.text
+			document.getElementById("analysedData").appendChild(tweet)
 		}
   	</script> 
+
+
+
+
 	<div style="height:100px"></div> 
 	<details>
-    		<summary><b>Wordcloud of positive words</b></summary>
+    		<summary><b>Wordcloud of Positive words</b></summary>
     		<div class="vegaContainer" id="pos"></div>
 	</details>
 
   	<div style="height:100px"></div>
 	<details>
-    		<summary><b>Wordcloud of negative words</b></summary>
+    		<summary><b>Wordcloud of Negative words</b></summary>
     		<div class="vegaContainer" id="neg"></div>
 	</details>
 
 	<div style="height:100px"></div>
 	<details>
-    		<summary><b>Sentiment and friendgroup size</b></summary>
+    		<summary><b>Sentiment and Friendgroup size</b></summary>
     		<div class="vegaContainer" id="sentiment"></div>
 	</details>
-
+	
+	<div style="height:100px"></div>
+	<details>
+    		<summary><b>Sentiment and Mention</b></summary>
+    		<div class="vegaContainer" id="mentions"></div>
+	</details>
+	<div style="height:500px"></div>
 
 
   	
