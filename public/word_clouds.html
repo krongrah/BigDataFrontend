@@ -9,7 +9,7 @@
   <meta name="author" content="Group2">
 
   <link rel="stylesheet" href="style.css">
-    
+  
   <!--Graph libraries:-->
   <script src="https://d3js.org/d3.v6.min.js"></script>
   
@@ -36,6 +36,7 @@
 		</tr>
 	</table>
   </div>
+
   <div class="content">
   	<div style="height:100px"></div>
   	<pre id="analysedData" style="max-height:250px; overflow-y:scroll; overflow-x:scroll;">data here:</pre>
@@ -51,9 +52,38 @@
     			const response = await fetch('http://localhost:3000/histdata');
     			const data = await response.json();
 			var text = utf8.decode(data)
+		
+			text.split("\n").forEach(line => {
+				try{
+					var obj = JSON.parse(line)
+					entries.push(obj)
+					if(obj.negativeWords.length > 0){
+						//Not an empty list:
+						negativeWords.push(obj.negativeWords)
+					}
+					if(obj.positiveWords.length > 0){
+						//Not an empty list:
+						positiveWords.push(obj.positiveWords)
+					}				
+				}catch(err){
+					//console.log(err)
+				}
+			});
+
+			console.log("Got " + entries.length + " tweets from server")
+			console.log("Negative: " + negativeWords)
+			console.log("Positive: " + positiveWords)
 			document.getElementById("analysedData").textContent = text
+			createWordCloud(negativeWords, "neg")
+			createWordCloud(positiveWords, "pos")
+
 		}
-  	</script>
-    </diV>
+  	</script>  
+  	<h1>Wordcloud of negative words:</h1>
+  	<div class="vegaContainer" id="neg"></div>
+
+  	<h1>Wordcloud of positive words:</h1>
+  	<div class="vegaContainer" id="pos"></div>
+  </div>
 </body>
 </html>

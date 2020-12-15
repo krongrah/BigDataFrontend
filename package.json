@@ -1,0 +1,28 @@
+{
+  "name": "web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "hdfs247": "^1.0.0",
+    "mkdirp": "^1.0.4",
+    "node-fetch": "^2.6.1",
+    "webhdfs": "^1.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dstoft/BigDataFrontend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dstoft/BigDataFrontend/issues"
+  },
+  "homepage": "https://github.com/dstoft/BigDataFrontend#readme"
+}
