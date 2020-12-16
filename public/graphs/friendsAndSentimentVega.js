@@ -9,10 +9,15 @@ function plotSentiments(sentiments, container){
 			"name": "table",
 			"values": sentiments
 		},
-  		"mark": "point",
+  		"mark": "bar",
+		"transform":[
+			{
+			"filter": {"field": "friendsCount", "range": [0, 30000]}
+			}
+		],
   		"encoding": {
-    			"y": {"field": "friendsCount", "type": "quantitative", "title": "Friends"},
-			"x": {"field": "sentimentScore", "type": "quantitative", "title": "Sentiment", "aggregate": "average"},
+    			"x": {"field": "friendsCount", "type": "quantitative", "title": "Average number of friends", "aggregate": "average"},
+			"y": {"field": "sentimentScore", "type": "ordinal", "title": "Sentiment"},
   		}
 	}
   	vegaEmbed('#' + container, graph);
