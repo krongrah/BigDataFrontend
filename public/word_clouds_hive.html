@@ -31,7 +31,7 @@
 			<a href="/">Home</a>
 			</td>
 			<td>
-			<a href="wordClouds">Word Clouds</a>
+				<a href="wordClouds">Word Clouds</a>
 			</td>
 			<td>
 				<a href="wordCloudsHive">Word Clouds with Hive</a>
@@ -45,42 +45,20 @@
   	<pre id="analysedData" style="max-height:250px; overflow-y:scroll; overflow-x:scroll;">data here:</pre>
   	<script src="utf8.js"></script>
   	<script>
-		fetchData()
-	
-		async function fetchData(){
-			var entries = []
-			var negativeWords = []
-			var positiveWords = []
-			console.log("Fetching hist data..");
-    			const response = await fetch('http://localhost:3000/histdata');
-    			const data = await response.json();
-			var text = utf8.decode(data)
-		
-			text.split("\n").forEach(line => {
-				try{
-					var obj = JSON.parse(line)
-					entries.push(obj)
-					if(obj.negativeWords.length > 0){
-						//Not an empty list:
-						negativeWords.push(obj.negativeWords)
-					}
-					if(obj.positiveWords.length > 0){
-						//Not an empty list:
-						positiveWords.push(obj.positiveWords)
-					}				
-				}catch(err){
-					//console.log(err)
-				}
-			});
-
-			console.log("Got " + entries.length + " tweets from server")
-			console.log("Negative: " + negativeWords)
-			console.log("Positive: " + positiveWords)
-			document.getElementById("analysedData").textContent = text
-			createWordCloud(negativeWords, "neg")
-			createWordCloud(positiveWords, "pos")
-
-		}
+		fetch('http://localhost:3000/hive/neg')
+				.then(response => response.json())
+				.then(data=>{
+					var negWords = [];
+					data.forEach(wordObj => negWords.push(wordObj["word"]));
+					createWordCloud(negWords, "neg")
+				});
+		fetch('http://localhost:3000/hive/pos')
+				.then(response => response.json())
+				.then(data=>{
+					var posWords = [];
+					data.forEach(wordObj => posWords.push(wordObj["word"]));
+					createWordCloud(posWords, "pos")
+				});
   	</script>  
   	<h1>Wordcloud of negative words:</h1>
   	<div class="vegaContainer" id="neg"></div>

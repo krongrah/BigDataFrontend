@@ -9,11 +9,17 @@ const express = require("express"),
   utf8 = require('utf8');
 ;
 
+const jsonBigint = require("json-bigint");
+
 
 //Defaults public path
 var public = 	"public"
 var graphs = 	"public/graphs"
 var style = 	"public/css"
+
+
+const odbc = require('odbc');
+const connectionString = "DSN=OdbcHive;Host=localhost;Port=10000";
 
 //Publish specific paths to the client
 app.use(express.static(public))
@@ -35,6 +41,11 @@ app.get("/wordClouds", function (req, res) {
   res.sendFile(path.join(__dirname, public, "word_clouds.html"))
 })
 
+//Wordclouds with Hive page request
+app.get("/wordCloudsHive", function (req, res) {
+	res.sendFile(path.join(__dirname, public, "word_clouds_hive.html"))
+})
+
 //Get from HDFS
 app.get("/histdata", function (req, res) {
 	fetch("http://localhost:9870/webhdfs/v1/user/hadoop/twitter-java-save-txt/V01Sql.1607699461165/?op=LISTSTATUS")
@@ -46,4 +57,32 @@ app.get("/histdata", function (req, res) {
   fetch("http://localhost:9870/webhdfs/v1/user/hadoop/twitter-java-save-txt/V01Sql.1607703257298/part-00000?op=OPEN")
 	.then(response => response.text())
 	.then(text => res.json(utf8.encode(text)))
+})
+
+app.get("/hive/neg", function (req, res) {
+	odbc.connect(connectionString, ((error, connection) => {
+		if (error) {
+			console.log(error)
+		}
+		console.log(connection.query("SELECT explode(negativewords) as word FROM default.avro_tbl;", ((error1, result) => {
+			if (error1) {
+				console.log(error1)
+			}
+			res.end(jsonBigint().stringify(result));
+		})))
+	}));
+})
+
+app.get("/hive/pos", function (req, res) {
+	odbc.connect(connectionString, ((error, connection) => {
+		if (error) {
+			console.log(error)
+		}
+		console.log(connection.query("SELECT explode(positivewords) as word FROM default.avro_tbl;", ((error1, result) => {
+			if (error1) {
+				console.log(error1)
+			}
+			res.end(jsonBigint().stringify(result));
+		})))
+	}));
 })

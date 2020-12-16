@@ -6,8 +6,11 @@
   "dependencies": {
     "express": "^4.17.1",
     "hdfs247": "^1.0.0",
+    "json-bigint": "^1.0.0",
     "mkdirp": "^1.0.4",
     "node-fetch": "^2.6.1",
+    "odbc": "^2.3.5",
+    "utf8": "^3.0.0",
     "webhdfs": "^1.2.0"
   },
   "devDependencies": {},
