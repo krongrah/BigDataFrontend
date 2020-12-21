@@ -2,13 +2,14 @@
 const express = require("express"),
   app = express(),
   http = require("http").Server(app),
-  port = 3000,
+  port = 3001,
   ip = "localhost",
   path = require("path"),
   fetch = require("node-fetch");
   utf8 = require('utf8'),
   fileReader = require('./FileReader.js')
 ;
+const ws = require('ws');
 
 
 var totalHistTweets = []
@@ -51,3 +52,14 @@ app.get("/live", function (req, res) {
 app.get("/livedata", function (req, res) {
 	console.log("Live data request")
 })
+
+const connection = new ws('ws://localhost:9001');
+
+connection.on('message', (message) => {
+  console.log(message);
+});
+
+connection.on('open', () => {
+  console.log("connection established");
+});
+
